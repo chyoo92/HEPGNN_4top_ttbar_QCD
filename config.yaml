@@ -1,0 +1,41 @@
+## Configuration for the training, evaluation
+samples:
+  - name: QCD700
+    label: 0
+    path: /store/hep/users/yewzzang/4top_QCD_ttbar/data_graph/pt/QCD_weight_210709/HT700*/*.pt
+    xsec: 6330
+    ngen: 98833
+  - name: QCD1000
+    label: 0
+    path: /store/hep/users/yewzzang/4top_QCD_ttbar/data_graph/pt/QCD_weight_210709/HT1000*/*.pt
+    xsec: 1090
+    ngen: 78290
+  - name: QCD1500
+    label: 0
+    path: /store/hep/users/yewzzang/4top_QCD_ttbar/data_graph/pt/QCD_weight_210709/HT1500*/*.pt
+    xsec: 99.1
+    ngen: 112873
+  - name: QCD
+    label: 0
+    path: /store/hep/users/yewzzang/4top_QCD_ttbar/data_graph/pt/QCD_weight_210709/HT2000/*.pt
+    xsec: 20.2
+    ngen: 76483
+  - name: ttbar
+    label: 1
+    path: /store/hep/users/yewzzang/4top_QCD_ttbar/data_graph/pt/ttbar_weight_210719/*.pt
+    xsec: 377.96
+    ngen: 2286310
+  - name: 4top
+    label: 2
+    path: /store/hep/users/yewzzang/4top_QCD_ttbar/data_graph/pt/4top_weight_210709/*/*.pt
+    xsec: 0.012
+    ngen: 2849104
+
+training:
+    randomSeed1: 12345
+    nDataLoaders: 4
+
+    splitFractions: [0.6, 0.2] ## training set, validation set. (test set is the reminders)
+
+    epoch: 400
+    learningRate: 1e-4
