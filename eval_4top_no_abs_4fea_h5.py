@@ -152,7 +152,7 @@ for i, data in enumerate(tqdm(testLoader)):
     
     pred = model(data)
     if args.cla == 3:
-
+        
         pred = F.softmax(pred, dim=1)
    
     
@@ -170,8 +170,7 @@ for i, data in enumerate(tqdm(testLoader)):
 # fPred = 'result/' + args.output + '/' + args.output + '.csv'
 # df.to_csv(fPred, index=False)
 if args.cla ==3:
-    df = pd.DataFrame({'label':labels, 
-                     'weight':weights, 'scaledWeight':scaledWeights})
+    df = pd.DataFrame({'label':labels, 'weight':weights, 'scaledWeight':scaledWeights})
     fPred = 'result/' + args.output + '/' + args.output + '.csv'
     df.to_csv(fPred, index=False)
 
