@@ -44,9 +44,9 @@ torch.set_num_threads(os.cpu_count())
 if torch.cuda.is_available() and args.device >= 0: torch.cuda.set_device(args.device)
 
 ##### Define dataset instance #####
-from dataset.HEPGNNDataset_h5_fea4 import *
+from dataset.HEPGNNDataset_h5_fea4_re import *
 
-dset = HEPGNNDataset_h5_fea4()
+dset = HEPGNNDataset_h5_fea4_re()
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']
@@ -73,8 +73,7 @@ from model.allModel import *
 
 model = torch.load('result/' + args.output+'/model.pth', map_location='cpu')
 model.load_state_dict(torch.load('result/' + args.output+'/weight.pth', map_location='cpu'))
-if args.cla == 1:
-    model.fc.add_module('output', torch.nn.Sigmoid())
+
 
 device = 'cpu'
 if args.device >= 0 and torch.cuda.is_available():
@@ -130,7 +129,7 @@ plt.clf()
 
 
 
-##### Start evaluation #####
+#### Start evaluation #####
 from tqdm import tqdm
 labels, preds = [], []
 weights = []

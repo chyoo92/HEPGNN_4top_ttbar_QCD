@@ -41,8 +41,7 @@ parser.add_argument('--cla', action='store', type=int, default=3, help='# class'
 #parser.add_argument('--k', action='store', type=int, default=0, help='device name')
 
 
-models = ['GNN1layer', 'GNN2layer', 'GNN3layer',
-         'GNN1layer_mul', 'GNN2layer_mul', 'GNN3layer_mul']
+models = ['GNN1layer_re', 'GNN2layer_re', 'GNN3layer_re']
 parser.add_argument('--model', choices=models, default=models[0], help='model name')
 
 
@@ -63,8 +62,8 @@ if not os.path.exists('result/' + args.output): os.makedirs('result/' + args.out
 
 
 ##### Define dataset instance #####
-from dataset.HEPGNNDataset_h5_fea4 import *
-dset = HEPGNNDataset_h5_fea4()
+from dataset.HEPGNNDataset_h5_fea4_re import *
+dset = HEPGNNDataset_h5_fea4_re()
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']
@@ -135,41 +134,22 @@ for epoch in range(nEpoch):
 #         scaledweight = torch.abs(scaledweight)
         pred = model(data)
  
-        if args.cla ==3:
-            crit = torch.nn.CrossEntropyLoss(reduction='none')
-            
-            loss = crit(pred, label)
-            loss = loss * scaledweight
-            loss.mean().backward()
 
-            optm.step()
-            optm.zero_grad()
+        crit = torch.nn.MSEloss(size_average=None, reduce=None, reduction='mean')
 
+        loss = crit(pred.view(-1), weight)
+        loss.backward()
 
-            ibatch = len(label)
-            nProcessed += ibatch
+        optm.step()
+        optm.zero_grad()
 
-            pred = torch.argmax(pred, 1)
-            trn_loss += loss.mean().item()*ibatch
-            trn_acc += accuracy_score(label.to('cpu'), pred.to('cpu'), 
-                                      sample_weight=scaledweight.to('cpu'))*ibatch
-        else:
-            crit = torch.nn.BCEWithLogitsLoss(weight=scaledweight)
-      
-            loss = crit(pred.view(-1), label)
-            loss.backward()
+        label = label.reshape(-1)
+        ibatch = len(label)
+        nProcessed += ibatch
+        trn_loss += loss.item()*ibatch
 
-            optm.step()
-            optm.zero_grad()
+        trn_acc += accuracy_score(label.to('cpu'), np.where(pred.to('cpu') > 0.5, 1, 0))*ibatch
 
-            label = label.reshape(-1)
-            ibatch = len(label)
-            nProcessed += ibatch
-            trn_loss += loss.item()*ibatch
-        
-            trn_acc += accuracy_score(label.to('cpu'), np.where(pred.to('cpu') > 0.5, 1, 0), 
-                                      sample_weight=scaledweight.to('cpu'))*ibatch
-        
         
         
         
@@ -194,34 +174,18 @@ for epoch in range(nEpoch):
         scaledweight = weight*scale
 #         scaledweight = torch.abs(scaledweight)
         pred = model(data)
-        if args.cla == 3:
-            crit = nn.CrossEntropyLoss(reduction='none')
-            loss = crit(pred, label)
-            loss = loss * scaledweight
+        
+        crit = torch.nn.MSEloss(size_average=None, reduce=None, reduction='mean')
+        loss = crit(pred.view(-1), weight)
+
+        label = label.reshape(-1)
+        ibatch = len(label)
+        nProcessed += ibatch
+        val_loss += loss.item()*ibatch
+
+        val_acc += accuracy_score(label.to('cpu'), np.where(pred.to('cpu') > 0.5, 1, 0))*ibatch
 
 
-
-
-            ibatch = len(label)
-            nProcessed += ibatch
-
-            pred=torch.argmax(pred,1)
-            val_loss += loss.mean().item()*ibatch
-            val_acc += accuracy_score(label.to('cpu'), pred.to('cpu'), 
-                                      sample_weight=scaledweight.to('cpu'))*ibatch
-        else:
-            crit = torch.nn.BCEWithLogitsLoss(weight=scaledweight)
-            loss = crit(pred.view(-1), label)
-
-            label = label.reshape(-1)
-            ibatch = len(label)
-            nProcessed += ibatch
-            val_loss += loss.item()*ibatch
-       
-            val_acc += accuracy_score(label.to('cpu'), np.where(pred.to('cpu') > 0.5, 1, 0), 
-                                      sample_weight=scaledweight.to('cpu'))*ibatch
-            
-            
             
             
     val_loss /= nProcessed

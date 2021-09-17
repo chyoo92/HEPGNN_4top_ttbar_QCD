@@ -44,9 +44,9 @@ torch.set_num_threads(os.cpu_count())
 if torch.cuda.is_available() and args.device >= 0: torch.cuda.set_device(args.device)
 
 ##### Define dataset instance #####
-from dataset.HEPGNNDataset_h5_fea4 import *
+from dataset.HEPGNNDataset_h5_fea4_abs import *
 
-dset = HEPGNNDataset_h5_fea4()
+dset = HEPGNNDataset_h5_fea4_abs()
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']

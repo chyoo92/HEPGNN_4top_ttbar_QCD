@@ -63,8 +63,8 @@ if not os.path.exists('result/' + args.output): os.makedirs('result/' + args.out
 
 
 ##### Define dataset instance #####
-from dataset.HEPGNNDataset_h5_fea4 import *
-dset = HEPGNNDataset_h5_fea4()
+from dataset.HEPGNNDataset_h5_fea4_abs import *
+dset = HEPGNNDataset_h5_fea4_abs()
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']
