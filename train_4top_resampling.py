@@ -135,7 +135,7 @@ for epoch in range(nEpoch):
         pred = model(data)
  
 
-        crit = torch.nn.MSEloss(size_average=None, reduce=None, reduction='mean')
+        crit = torch.nn.MSELoss(size_average=None, reduce=None, reduction='mean')
 
         loss = crit(pred.view(-1), weight)
         loss.backward()
@@ -175,7 +175,7 @@ for epoch in range(nEpoch):
 #         scaledweight = torch.abs(scaledweight)
         pred = model(data)
         
-        crit = torch.nn.MSEloss(size_average=None, reduce=None, reduction='mean')
+        crit = torch.nn.MSELoss(size_average=None, reduce=None, reduction='mean')
         loss = crit(pred.view(-1), weight)
 
         label = label.reshape(-1)

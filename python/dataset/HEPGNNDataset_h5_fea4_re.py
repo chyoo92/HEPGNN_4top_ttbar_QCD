@@ -39,7 +39,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
         weight = self.weightList[fileIdx][idx]
         rescale = self.rescaleList[fileIdx][idx]
         procIdxs = self.procList[fileIdx][idx]
-        
+        btag = torch.Tensor(self.btagList[fileIdx][idx])
         
         feats = torch.Tensor(self.feaList[fileIdx][idx])
         poses = torch.Tensor(self.posList[fileIdx][idx])
@@ -54,7 +54,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
         
         data.ss = rescale.item()
 
-        return data
+        return data, btag
     def addSample(self, procName, fNamePattern, weight=1, logger=None):
         if logger: logger.update(annotation='Add sample %s <= %s' % (procName, fNames))
         print(procName, fNamePattern)
@@ -93,7 +93,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
         self.posList = []
         self.feaList = []
         self.edgeList = []
-        
+        self.btagList = []
         
         
         nFiles = len(self.sampleInfo)
@@ -128,6 +128,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
             f_pos_list = []
             f_fea_list = []
             f_edge_list = []
+            f_btag_list = []
             for j in range(nEvent):
 #                 f_pos_reshape = torch.reshape(f_pos[j],(-1,3))
                 f_pos_reshape = f_pos[j].reshape(-1,3)
@@ -149,6 +150,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
 
      
                 f_fea_list.append(f_fea_reshape[:,:4])
+                f_btag_list.append(f_fea_reshape[:,5])
                 f_edge_list.append(f_edge_reshape)
             
             
@@ -161,6 +163,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
             self.posList.append(f_pos_list)
             self.feaList.append(f_fea_list)
             self.edgeList.append(f_edge_list)
+            self.btagList.append(f_btag_list)
             self.rescaleList.append(torch.ones(nEvent, dtype=torch.float32, requires_grad=False))
             procIdx = procNames.index(self.sampleInfo['procName'][i])
             self.procList.append(torch.ones(nEvent, dtype=torch.int32, requires_grad=False)*procIdx)

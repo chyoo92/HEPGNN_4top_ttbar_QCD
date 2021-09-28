@@ -30,7 +30,7 @@ class GNN3layer_mul(nn.Module):
             nn.Linear( 1024, 512), nn.ReLU(), nn.BatchNorm1d(512), nn.Dropout(0.5),
             nn.Linear( 512, 256), nn.ReLU(), nn.BatchNorm1d(256), nn.Dropout(0.5),
             nn.Linear( 256, 128), nn.ReLU(), nn.BatchNorm1d(128), nn.Dropout(0.5),
-            nn.Linear( 128,   self.cla),F.softmax(z, dim=0),
+            nn.Linear( 128,   self.cla),
         )
         
     def forward(self, data):
@@ -44,5 +44,6 @@ class GNN3layer_mul(nn.Module):
         x, pos, batch, edge_index = self.conv3(x, data)
         
         x, pos, batch = self.pool(x, pos, batch)
-        out = self.fc(x)
+        x = self.fc(x)
+        out = F.softmax(x, dim=0)
         return out

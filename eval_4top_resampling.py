@@ -134,13 +134,19 @@ from tqdm import tqdm
 labels, preds = [], []
 weights = []
 scaledWeights = []
+
+poss = []
+batch_size = []
+features = []
+btags = []
+
 procIdxs = []
 fileIdxs = []
 idxs = []
 model.eval()
 val_loss, val_acc = 0., 0.
 # for i, (data, label0, weight, rescale, procIdx, fileIdx, idx, dT, dVertex, vertexX, vertexY, vertexZ) in enumerate(tqdm(testLoader)):
-for i, data in enumerate(tqdm(testLoader)):
+for i, data, btag in enumerate(tqdm(testLoader)):
     
     data = data.to(device)
     label = data.y.float().to(device=device)
@@ -151,13 +157,21 @@ for i, data in enumerate(tqdm(testLoader)):
     
     
     pred = model(data)
-    
-    
-
+  
+#     print(label)
+#     print(data.pos)
+#     stop
+    btags.extend([x.item() for x in btag.view(-1)])
     labels.extend([x.item() for x in label])
     weights.extend([x.item() for x in weight])
     preds.extend([x.item() for x in pred.view(-1)])
     scaledWeights.extend([x.item() for x in (scaledweight).view(-1)])
+    
+    poss.extend([x.item() for x in data.pos.view(-1)])
+    features.extend([x.item() for x in data.x.view(-1)])
+    batch_size.append(data.x.shape[0])
+    
+    
 #     procIdxs.extend([x.item() for x in procIdx])
 #     fileIdxs.extend([x.item() for x in fileIdx])
 #     idxs.extend([x.item() for x in idx])
@@ -166,22 +180,27 @@ for i, data in enumerate(tqdm(testLoader)):
 
 # fPred = 'result/' + args.output + '/' + args.output + '.csv'
 # df.to_csv(fPred, index=False)
-if args.cla ==3:
-    df = pd.DataFrame({'label':labels, 'weight':weights, 'scaledWeight':scaledWeights})
-    fPred = 'result/' + args.output + '/' + args.output + '.csv'
-    df.to_csv(fPred, index=False)
 
-    df2 = pd.DataFrame({'prediction':preds})
-    predonlyFile = 'result/' + args.output + '/' + args.output + '_pred.csv'
-    df2.to_csv(predonlyFile, index=False)
-else:
-    df = pd.DataFrame({'label':labels, 'prediction':preds,
-                     'weight':weights, 'scaledWeight':scaledWeights})
-    fPred = 'result/' + args.output + '/' + args.output + '.csv'
-    df.to_csv(fPred, index=False)
+df = pd.DataFrame({'label':labels, 'prediction':preds,
+                 'weight':weights, 'scaledWeight':scaledWeights})
+fPred = 'result/' + args.output + '/' + args.output + '.csv'
+df.to_csv(fPred, index=False)
 
+df2 = pd.DataFrame({'pos':poss})
+fPred2 = 'result/' + args.output + '/' + args.output + '_pos.csv'
+df2.to_csv(fPred2, index=False)
 
+df3 = pd.DataFrame({'feature':features})
+fPred3 = 'result/' + args.output + '/' + args.output + '_feature.csv'
+df3.to_csv(fPred3, index=False)
 
+df4 = pd.DataFrame({'batch':batch_size})
+fPred4 = 'result/' + args.output + '/' + args.output + '_batch.csv'
+df4.to_csv(fPred4, index=False)
+
+df5 = pd.DataFrame({'btag':btags})
+fPred5 = 'result/' + args.output + '/' + args.output + '_btag.csv'
+df5.to_csv(fPred5, index=False)
 # from sklearn.metrics import roc_curve, roc_auc_score
 # df = pd.read_csv(predFile)
 # df2 = pd.read_csv(predonlyFile)

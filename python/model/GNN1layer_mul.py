@@ -25,7 +25,7 @@ class GNN1layer_mul(nn.Module):
 
         self.fc = nn.Sequential(
             nn.Linear( 128, 64), nn.ReLU(), nn.BatchNorm1d(64), nn.Dropout(0.5),
-            nn.Linear( 64,  self.cla), F.softmax(z, dim=0),
+            nn.Linear( 64,  self.cla), 
         )
         
     def forward(self, data):
@@ -34,7 +34,8 @@ class GNN1layer_mul(nn.Module):
         
         x, pos, batch = self.pool(x, pos, batch)
         
-        out = self.fc(x)
+        x = self.fc(x)
+        out = F.softmax(x, dim=0)
 #         x = self.fc(x)
 #         out = F.log_softmax(x)
         return out

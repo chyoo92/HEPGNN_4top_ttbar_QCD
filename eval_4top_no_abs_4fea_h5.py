@@ -76,6 +76,7 @@ model.load_state_dict(torch.load('result/' + args.output+'/weight.pth', map_loca
 if args.cla == 1:
     model.fc.add_module('output', torch.nn.Sigmoid())
 
+
 device = 'cpu'
 if args.device >= 0 and torch.cuda.is_available():
     model = model.cuda()
@@ -152,7 +153,8 @@ for i, data in enumerate(tqdm(testLoader)):
     
     
     pred = model(data)
-    
+ 
+    pred = F.log_softmax(pred, dim=1)   
     
 
     labels.extend([x.item() for x in label])
