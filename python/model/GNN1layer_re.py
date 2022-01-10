@@ -29,7 +29,7 @@ class GNN1layer_re(nn.Module):
         )
         
     def forward(self, data):
-       
+     
         x, pos, batch, edge_index = self.conv1(data)
         
         x, pos, batch = self.pool(x, pos, batch)

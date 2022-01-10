@@ -42,7 +42,7 @@ parser.add_argument('--cla', action='store', type=int, default=3, help='# class'
 
 
 models = ['GNN1layer', 'GNN2layer', 'GNN3layer',
-         'GNN1layer_mul', 'GNN2layer_mul', 'GNN3layer_mul']
+         'GNN1layer_mul', 'GNN2layer_mul', 'GNN3layer_mul','GravNet']
 parser.add_argument('--model', choices=models, default=models[0], help='model name')
 
 
@@ -133,6 +133,7 @@ for epoch in range(nEpoch):
         weight = data.ww.float().to(device)
         scaledweight = weight*scale
 #         scaledweight = torch.abs(scaledweight)
+        
         pred = model(data)
  
         if args.cla ==3:

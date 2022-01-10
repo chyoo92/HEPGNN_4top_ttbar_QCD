@@ -45,8 +45,8 @@ if torch.cuda.is_available() and args.device >= 0: torch.cuda.set_device(args.de
 
 ##### Define dataset instance #####
 from dataset.HEPGNNDataset_h5_fea4_re import *
-
 dset = HEPGNNDataset_h5_fea4_re()
+
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']
@@ -146,7 +146,7 @@ idxs = []
 model.eval()
 val_loss, val_acc = 0., 0.
 # for i, (data, label0, weight, rescale, procIdx, fileIdx, idx, dT, dVertex, vertexX, vertexY, vertexZ) in enumerate(tqdm(testLoader)):
-for i, data, btag in enumerate(tqdm(testLoader)):
+for i, (data, btag) in enumerate(tqdm(testLoader)):
     
     data = data.to(device)
     label = data.y.float().to(device=device)

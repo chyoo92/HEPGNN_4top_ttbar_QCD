@@ -64,6 +64,7 @@ if not os.path.exists('result/' + args.output): os.makedirs('result/' + args.out
 ##### Define dataset instance #####
 from dataset.HEPGNNDataset_h5_fea4_re import *
 dset = HEPGNNDataset_h5_fea4_re()
+
 for sampleInfo in config['samples']:
     if 'ignore' in sampleInfo and sampleInfo['ignore']: continue
     name = sampleInfo['name']
@@ -121,6 +122,7 @@ for epoch in range(nEpoch):
     optm.zero_grad()
 
     for i, data in enumerate(tqdm(trnLoader, desc='epoch %d/%d' % (epoch+1, nEpoch))):
+        print(data)
         data = data.to(device)
         if args.cla == 3:
             label = data.y.long().to(device=device)

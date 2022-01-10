@@ -1,19 +1,6 @@
 #!/bin/bash
 
-# python eval_4top_resampling.py --config config_QCD_re_test.yaml --batch 1 -o 210917_QCD_1layer_re --device 0
 
-# python train_4top_resampling.py --config config_QCD_re.yaml --epoch 200 --batch 2048 -o 210917_QCD_1layer_re --device 0 --cla 1 --model GNN1layer_re --fea 4
+python train_4top_resampling_lhe.py --config config_lhe_wbjet.yaml --epoch 10000 --batch 64 -o 20220110_wbjet_1 --device 2 --cla 1 --model GCN3 --fea 4 --lr 1e-3 --color 0
 
-python eval_4top_resampling.py --config config_QCD_re.yaml --batch 1 -o 210917_QCD_1layer_re --device 0
-
-
-# python train_4top_resampling.py --config config_ttbar_re.yaml --epoch 200 --batch 2048 -o 210917_ttbar_1layer_re --device 0 --cla 1 --model GNN1layer_re --fea 4
-
-python eval_4top_resampling.py --config config_ttbar_re.yaml --batch 1 -o 210917_ttbar_1layer_re --device 0
-
-
-
-# python train_4top_resampling.py --config config_4top_re.yaml --epoch 200 --batch 2048 -o 210917_4top_1layerr_re --device 0 --cla 1 --model GNN1layer_re --fea 4
-
-python eval_4top_resampling.py --config config_4top_re.yaml --batch 1 -o 210917_4top_1layer_re --device 0
-
+python eval_4top_resampling_lhe.py --config config_lhe_wbjet.yaml --batch 1 -o 20220110_wbjet_1 --device 2 --color 0

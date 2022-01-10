@@ -46,15 +46,17 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
         edges = torch.Tensor(self.edgeList[fileIdx][idx])
         edges = edges.type(dtype = torch.long)
         
+
     
         data = PyGData(x = feats, pos = poses, edge_index = edges)
+        
         data.ww = weight.item()
 
         data.y = label
         
         data.ss = rescale.item()
-
-        return data, btag
+#         print(data)
+        return data
     def addSample(self, procName, fNamePattern, weight=1, logger=None):
         if logger: logger.update(annotation='Add sample %s <= %s' % (procName, fNames))
         print(procName, fNamePattern)
@@ -123,7 +125,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
             f_fea = f['fea'].get('fea')
             f_edge = f['edge'].get('edge')
 
-            
+
             
             f_pos_list = []
             f_fea_list = []
@@ -134,9 +136,7 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
                 f_pos_reshape = f_pos[j].reshape(-1,3)
                 f_fea_reshape = f_fea[j].reshape(-1,7)
                 f_edge_reshape = f_edge[j].reshape(2,-1)
-        
-                
-                
+   
                 weights = f_fea_reshape[:,6][0]/np.abs(f_fea_reshape[:,6][0])
 
                 ### weights = w_ik
@@ -150,7 +150,9 @@ class HEPGNNDataset_h5_fea4_re(PyGDataset):
 
      
                 f_fea_list.append(f_fea_reshape[:,:4])
+               
                 f_btag_list.append(f_fea_reshape[:,5])
+                
                 f_edge_list.append(f_edge_reshape)
             
             
