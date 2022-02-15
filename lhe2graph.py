@@ -29,14 +29,14 @@ out_edge2 = []
 out_edgeColor1 = []
 out_edgeColor2 = []
 
-lheInit = pylhe.readLHEInit(args.input)
+lheInit = pylhe.read_lhe_init(args.input)
 ## Find out which is the unit weight
 proc2Weight0 = {}
 for procInfo in lheInit['procInfo']:
     procId = int(procInfo['procId'])
     proc2Weight0[procId] = procInfo['unitWeight']
 
-lheEvents = pylhe.readLHEWithAttributes(args.input)
+lheEvents = pylhe.read_lhe_with_attributes(args.input)
 #lheEvents = pylhe.readLHE(args.input)
 iEvent = 0
 for event in lheEvents:
