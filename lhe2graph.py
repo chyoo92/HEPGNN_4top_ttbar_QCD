@@ -29,13 +29,15 @@ out_edge2 = []
 out_edgeColor1 = []
 out_edgeColor2 = []
 
-lheInit = pylhe.read_lhe_init(args.input)
-## Find out which is the unit weight
-proc2Weight0 = {}
-for procInfo in lheInit['procInfo']:
-    procId = int(procInfo['procId'])
-    proc2Weight0[procId] = procInfo['unitWeight']
+# lheInit = pylhe.read_lhe_init(args.input)
+# lheInit = pylhe.readLHEInit(args.input)
+# ## Find out which is the unit weight
+# proc2Weight0 = {}
+# for procInfo in lheInit['procInfo']:
+#     procId = int(procInfo['procId'])
+#     proc2Weight0[procId] = procInfo['unitWeight']
 
+# lheEvents = pylhe.readLHEWithAttributes(args.input)
 lheEvents = pylhe.read_lhe_with_attributes(args.input)
 #lheEvents = pylhe.readLHE(args.input)
 iEvent = 0
@@ -43,11 +45,15 @@ for event in lheEvents:
     iEvent += 1
     if args.verbose: print("Processing %d'th events" % (iEvent), end='\r')
     ## Extract event weights and scale them
-    procId = int(event.eventinfo.pid)
-    weight0 = proc2Weight0[procId]
+#     procId = int(event.eventinfo.pid)
+#     weight0 = proc2Weight0[procId]
 
-    weight = event.eventinfo.weight/weight0
-    weights = [w/weight0 for w in event.weights.values()]
+
+#     weight = event.eventinfo.weight/weight0
+#     weights = [w/weight0 for w in event.weights.values()]
+    
+    weight = event.eventinfo.weight
+    weights = [w for w in event.weights.values()]
 
     out_weight.append(weight)
     out_weights.append(weights)
